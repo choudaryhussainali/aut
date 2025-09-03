@@ -12,7 +12,7 @@ st.set_page_config(
     page_title="AutoMARK AI - Professional MCQs Grading",
     page_icon="🎓",
     layout="wide",
-    # initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded"
 )
 
 # Professional CSS styling
@@ -1433,3 +1433,4 @@ def main():
 if __name__ == "__main__":
 
     main()
+
