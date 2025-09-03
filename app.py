@@ -590,11 +590,10 @@ def configure_gemini():
         return None
 
 def check_image_quality(image):
+    import numpy as np
     """Check if the image is too blurry for accurate processing using multiple methods"""
     try:
         import cv2
-        import numpy as np
-        
         # Convert PIL image to OpenCV format
         img_array = np.array(image)
         if len(img_array.shape) == 3:
@@ -1432,4 +1431,5 @@ def main():
     """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
+
     main()
