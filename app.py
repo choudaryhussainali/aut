@@ -10,7 +10,7 @@ import google.generativeai as genai
 # Page configuration
 st.set_page_config(
     page_title="AutoMARK AI - Professional MCQs Grading",
-    page_icon="🎓",
+    page_icon="✔️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -61,12 +61,32 @@ st.markdown("""
     }
     
     div .hero-subtitle {
-        font-size: 1rem;
+        font-size: 1.3rem;
         font-weight: 300;
+        opacity: 0;
         margin-bottom: 0.5rem;
-        overflow: hidden;
+        transform: scale(0.3);
+        animation: scaleBounceLoop 6s infinite;
     }
 
+    @keyframes scaleBounceLoop {
+        0%, 60%, 100% {
+            opacity: 1;
+            transform: scale(0.8);
+        }
+        10% {
+            opacity: 1;
+            transform: scale(0.8);
+        }
+        25% {
+            opacity: 0;
+            transform: scale(0.3);
+        }
+        40% {
+            opacity: 1;
+            transform: scale(0.8);
+        }
+    }
     .word {
         display: inline-block;
         padding-left: 4px;
@@ -233,7 +253,7 @@ st.markdown("""
         white-space: nowrap;
         overflow: hidden;
         animation: continuousType 4s infinite, blink 1s infinite;
-        width: 0;
+        width: 11ch;
     }
 
     @keyframes continuousType {
@@ -273,27 +293,6 @@ st.markdown("""
         flex-wrap: wrap;
     }
             
-    
-    
-    .social-btn {
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-        height: 50px;
-        width: 50ox;
-        padding: 0.75rem 0.75rem;
-        border-radius: 50%;
-        text-decoration: none !important;
-        font-weight: 600;
-        background: linear-gradient(135deg, #2d3748, #4a5568);
-        color: white !important;
-        position: relative;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        white-space: nowrap;
-        animation: socialsAnimation 2s ease-in-out infinite;
-    }
         
     .name-container {
         position: relative;
@@ -424,6 +423,27 @@ st.markdown("""
             transform: scale(0.3);
         }
     }
+            
+    .social-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        height: 50px;
+        width: 50px;
+        padding: 0.75rem 0.75rem;
+        border-radius: 50%;
+        text-decoration: none !important;
+        font-weight: 600;
+        background: linear-gradient(135deg, #2d3748, #4a5568);
+        color: white !important;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        white-space: nowrap;
+        animation: socialsAnimation 2s ease-in-out infinite;
+    }
+            
     .social-btn::before {
         content: "";
         position: absolute;
@@ -433,8 +453,7 @@ st.markdown("""
         width: 200%;
         height: 100%;
         background: linear-gradient(120deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
-        transform: skewX(-20deg);
-        transition: all 0.5s ease;
+        transition: left 0.5s ease;
     }
     
 
@@ -443,8 +462,7 @@ st.markdown("""
     }
 
     .social-btn:hover {
-        transform: scale(1.35);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        transform: scale(1.1) !important;
         text-decoration: none;
         color: black !important;
     }
@@ -475,15 +493,15 @@ st.markdown("""
             
     @keyframes socialsAnimation {
         0% {
-            box-shadow: 0 1px 5px rgba(36, 52, 77,0.7);
+            box-shadow: 0 2px 5px rgba(36, 52, 77,0.7);
             transform: scale(1);
         }
         50% {
-            box-shadow: 0 3px 10px rgba(36, 52, 77,1);
-            transform: scale(1.1);
+            box-shadow: 0 5px 10px rgba(36, 52, 77,0.9);
+            transform: scale(1.01);
         }
         100% {
-            box-shadow: 0 1px 5px rgba(0,36, 52, 77.7);
+            box-shadow: 0 2px 5px rgba(0,36, 52, 77,.7); 
             transform: scale(1);
         }
     }
@@ -552,14 +570,52 @@ st.markdown("""
     .sidebar .block-container {
         padding-top: 2rem;
     }
-    
-    .contact-form {
-        background: #f8fafc;
-        padding: 2rem;
+
+    .tips-card {
+        background: rgba(255, 255, 255, 0.05);
         border-radius: 15px;
+        padding: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
         margin: 1rem 0;
-        border: 1px solid #e2e8f0;
     }
+
+    .tips-card h4 {
+        margin: 0 0 1rem 0;
+        font-size: 1.2rem;
+    }
+
+    .tips-card h5 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1rem;
+    }
+
+    .tips-card ul {
+        margin: 0;
+        padding-left: 1.5rem;
+        font-size: 0.9rem;
+    }
+
+    .tips-card li {
+        margin-bottom: 0.3rem;
+    }
+
+    .tips-columns {
+        display: flex;
+        gap: 1rem;
+        margin: 1rem 0;
+    }
+
+    .tips-column {
+        flex: 1;
+    }
+
+    @media (max-width: 768px) {
+        .tips-columns {
+            flex-direction: column;
+        }
+    }
+
+            
 </style>
 """, unsafe_allow_html=True)
 
@@ -591,9 +647,11 @@ def configure_gemini():
 
 def check_image_quality(image):
     import numpy as np
+
     """Check if the image is too blurry for accurate processing using multiple methods"""
     try:
         import cv2
+        
         # Convert PIL image to OpenCV format
         img_array = np.array(image)
         if len(img_array.shape) == 3:
@@ -1069,7 +1127,7 @@ def main():
                 </p>
          </div>
         <p><span class="pro-badge">AI POWERED</span></p>
-        <p style="font-size: 1.1rem; opacity: 0.8; max-width: 600px; margin: 0 auto;">
+        <p style="font-size: 1rem; opacity: 0.7; max-width: 600px; margin: 0 auto;">
             Transform your grading process with cutting-edge AI technology. 
             Fast, accurate, and reliable automated MCQs evaluation.
         </p>
@@ -1158,11 +1216,13 @@ def main():
             
             # Image info
             st.markdown(f"""
-            <div style="background: #f8fafc; padding: 1rem; border-radius: 10px; margin-top: 1rem;">
-                <strong>📋 Image Details:</strong><br>
-                • Size: {image.size[0]} x {image.size[1]} pixels<br>
-                • Format: {image.format}<br>
-                • File: {uploaded_file.name}
+            <div style="background: white; color: black; padding: 1rem 1rem 0.5rem 1rem; border-radius: 10px; margin: 1rem;margin-bottom: 2rem; box-shadow: 10px 15px 30px rgba(0,0,0,0.15);">
+                <strong><i class="fa-solid fa-image"></i> Image Details:</strong><br>
+                <p style="opacity: 0.8;">
+                    • Size: {image.size[0]} x {image.size[1]} pixels<br>
+                    • Format: {image.format}<br>
+                    • File: {uploaded_file.name}
+                </p>
             </div>
             """, unsafe_allow_html=True)
         
@@ -1191,7 +1251,7 @@ def main():
                         status_text.text("📊 Calculating results...")
                     else:
                         status_text.text("✅ Finalizing analysis...")
-                    time.sleep(0.1)
+                    time.sleep(0.04)
                 
                 # Clear progress indicators
                 progress_bar.empty()
@@ -1203,43 +1263,29 @@ def main():
                 if error:
                     st.error(f"❌ **Analysis Failed**")
                     st.markdown(f"""
-                    <div style="background: #fee2e2; border: 1px solid #fecaca; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                    <div style="background: #fee2e2; color: black; border: 1px solid #fecaca; padding: 1.5rem; border-radius: 10px; margin: 1rem 0 2rem;">
                         <h4 style="color: #dc2626; margin-top: 0;">Error Details:</h4>
                         <p style="color: #7f1d1d; margin-bottom: 0;">{error}</p>
                     </div>
                     """, unsafe_allow_html=True)
                     
-                    if "quality insufficient" in error.lower() or "blurry" in error.lower():
-                        st.markdown("""
-                        <div class="feature-card">
-                            <h4 style="color: #f59e0b;">📷 Photography Tips for Best Results</h4>
-                            
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0;">
-                                <div>
-                                    <h5 style="color: #667eea;">📱 Camera Settings</h5>
-                                    <ul style="color: #666;">
-                                        <li>Use camera app (not screenshots)</li>
-                                        <li>Enable HDR/auto-focus</li>
-                                        <li>Tap to focus on paper</li>
-                                        <li>Use highest quality setting</li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h5 style="color: #667eea;">🎯 Positioning</h5>
-                                    <ul style="color: #666;">
-                                        <li>Hold phone directly above</li>
-                                        <li>12-18 inches distance</li>
-                                        <li>Keep phone steady</li>
-                                        <li>Ensure paper is flat</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            
-                            <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; border-left: 4px solid #0ea5e9;">
-                                <strong>💡 Pro Tip:</strong> Use natural daylight and avoid shadows for optimal results!
-                            </div>
-                        </div>
-                        """, unsafe_allow_html=True)
+                    if "quality insufficient" in error.lower():
+
+                        st.markdown('<h4><i class="fa-solid fa-camera"></i> Image Quality Tips</h4>', unsafe_allow_html=True)
+                        with st.expander("Make sure this !", expanded=True):
+                            col1, col2, col3 = st.columns(3)
+                            with col1:
+                                st.write("**Camera Settings:**")
+                                st.write("• Use camera app")
+                                st.write("• Enable HDR/focus")
+                                st.write("• Highest quality")
+                            with col2:
+                                st.write("**Positioning:**")
+                                st.write("• Hold directly above")
+                                st.write("• 12-18 inches away")
+                                st.write("• Keep steady")
+                            with col3:
+                                st.info("📄 Upload only exam papers with multiple choice questions for best results")
                 elif result:
                     st.success("🎉 **Analysis Completed Successfully!**")
                     st.balloons()
@@ -1431,6 +1477,4 @@ def main():
     """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
-
     main()
-
