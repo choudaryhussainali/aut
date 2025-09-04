@@ -6,6 +6,8 @@ import json
 import os
 import numpy as np
 import google.generativeai as genai
+import random
+from fun_mcqs import fun_mcqs
 
 # Page configuration
 st.set_page_config(
@@ -1028,28 +1030,8 @@ def sidebar_content():
             </div>
         """, unsafe_allow_html=True)
         
-        st.markdown("---")
-        
-        st.markdown("### 📍 Core Insights")
+        st.markdown("---") 
 
-        col1, col2, col3 = st.columns(3)
-
-        with col1:
-            st.metric(label="Total Processed", value="500+", delta="23%")
-
-        with col2:
-            st.metric(label="Accuracy Rate", value="98.5%", delta="2.1%")
-
-        with col3:
-            st.metric(label="User Satisfaction", value="4.7 / 5", delta="⭐⭐")
-
-        st.markdown(
-            "<p style='text-align:center; color:gray; font-size: 0.9em;'>Updated in real-time based on user activity</p>",
-            unsafe_allow_html=True,
-        )
-        
-        st.markdown("---")
-        
         st.markdown("""<div style="text-align: center;"><h3 style="color: #667eea; margin-bottom: 1rem;">How We Work</h3></div>""", unsafe_allow_html=True)
         
         steps = [
@@ -1061,7 +1043,7 @@ def sidebar_content():
         
         for i, (icon, title, desc) in enumerate(steps):
             st.markdown(f"""
-            <div style="background: rgba(255,255,255,0.05); border-radius: 10px; padding: 1rem; margin-bottom: 1.5rem; border-left: 3px solid #3b82f6;">
+            <div style="background: linear-gradient(135deg, #f9fafb, #f3f4f6); border-radius: 10px; padding: 1rem; margin-bottom: 1.5rem; border-left: 3px solid #3b82f6;">
                 <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
                     <span style="font-size: 1.5rem; margin-right: 0.8rem;">{icon}</span>
                     <h5 style="color: #667eea; margin: 0; font-size: 0.9rem;">{title}</h5>
@@ -1078,14 +1060,76 @@ def sidebar_content():
         - 🤖 **AI-Powered Grading**
         - 🎯 **98.5% Accuracy**
         - ⚡ **Lightning Fast**
-        - 📱 **Mobile Friendly**
+        - 📱  **Mobile Friendly**
         - 🔒 **Secure & Private**
         - 🌍 **Global Access**
         - 📊 **Detailed Analytics**
         - 💾 **Export Results**
         """)
         st.markdown("---")
+        st.markdown("""
+             <h3 style='text-align: center;'><i class="fa-solid fa-bars-progress"></i> Core Insights</h3>""",
+            unsafe_allow_html=True
+        )
 
+        insights = [
+            ("📂", "Total Processed", "500+", "+23%"),
+            ("🎯", "Accuracy Rate", "98.5%", "+2.1%"),
+            ("⭐", "User Satisfaction", "4.7 / 5", "Stable"),
+        ]
+
+        for icon, title, value, delta in insights:
+            st.markdown(f"""
+            <div style="
+                background: linear-gradient(135deg, #f9fafb, #f3f4f6);
+                border-radius: 12px;
+                padding: 1rem;
+                margin-bottom: 0.8rem;
+                border-left: 4px solid #667eea;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            ">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                    <div style="display:flex; align-items:center;">
+                        <span style="font-size:1.4rem; margin-right:0.6rem;">{icon}</span>
+                        <div>
+                            <p style="margin:0; font-size:0.85rem; color:#555;">{title}</p>
+                            <h4 style="margin:0; font-size:1.1rem; color:#1f2937;">{value}</h4>
+                        </div>
+                    </div>
+                    <span style="font-size:0.9rem; color:#10b981; font-weight:600;">{delta}</span>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+
+        def fun_fact_mcq_sidebar():
+            """Sidebar widget: Fun Fact MCQ of the Day"""
+            st.markdown("""
+                <h2 style='text-align: center;'><i style="color:yellow;" class="fa-solid fa-lightbulb"></i></i> Fun Fact <strong style="color: #667eea;">MCQ</strong> of the day </h2>""",
+                unsafe_allow_html=True
+            )
+            q = random.choice(fun_mcqs)
+            # Show the question
+            st.sidebar.write(f"**{q['question']}**")
+            
+            # Show options
+            choice = st.sidebar.radio(
+                "Pick your answer:",
+                q["options"],
+                key="fun_mcq_choice"
+            )
+            
+            # Submit button
+            if st.sidebar.button("Submit Answer", key="fun_mcq_submit"):
+                if choice == q["answer"]:
+                    st.sidebar.success(f"✅ Correct! {q['fact']}")
+                else:
+                    st.sidebar.error(f"❌ Oops! Correct answer: **{q['answer']}**\n\n{q['fact']}")
+
+
+        fun_fact_mcq_sidebar()
+        st.markdown("---")
         st.markdown("""
             <div style="text-align: center; padding: 0; margin-top: 0.5rem;">
                 <p style="color: #999; font-size: 0.9rem; margin: 0.5rem 0 0 0;">
