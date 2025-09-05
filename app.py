@@ -3,11 +3,17 @@ from PIL import Image
 import io
 import time
 import json
+import smtplib
+from email.mime.text import MIMEText
 import os
 import numpy as np
 import google.generativeai as genai
 import random
 from fun_mcqs import fun_mcqs
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Page configuration
 st.set_page_config(
@@ -16,6 +22,34 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+load_dotenv()
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
+EMAIL_USER = os.getenv("EMAIL_USER")
+EMAIL_PASS = os.getenv("EMAIL_PASS")
+TO_EMAIL = os.getenv("TO_EMAIL")
+
+
+def send_email(name, email, message):
+    """Send email using SMTP"""
+    body = f"📩 New contact form submission:\n\nName: {name}\nEmail: {email}\n\nMessage:\n{message}"
+
+    msg = MIMEText(body)
+    msg["Subject"] = "New Contact Form Submission"
+    msg["From"] = EMAIL_USER
+    msg["To"] = TO_EMAIL
+
+    try:
+        with smtplib.SMTP(EMAIL_HOST, EMAIL_PORT) as server:
+            server.starttls()
+            server.login(EMAIL_USER, EMAIL_PASS)
+            server.send_message(msg)
+        return True
+    except Exception as e:
+        st.error(f"❌ Email failed: {e}")
+        return False
+
 
 # Professional CSS styling
 
@@ -1054,18 +1088,76 @@ def sidebar_content():
          
         st.markdown("---")
 
-        # App Features
-        st.markdown("### ⚡ Features")
-        st.markdown("""
-        - 🤖 **AI-Powered Grading**
-        - 🎯 **98.5% Accuracy**
-        - ⚡ **Lightning Fast**
-        - 📱  **Mobile Friendly**
-        - 🔒 **Secure & Private**
-        - 🌍 **Global Access**
-        - 📊 **Detailed Analytics**
-        - 💾 **Export Results**
-        """)
+        def contact_form_sidebar():
+            # Custom CSS
+            st.markdown("""
+                <style>
+                .contact-box {
+                    background: linear-gradient(135deg, #f8f9fa, #ffffff);
+                    border-radius: 16px;
+                    padding: 20px;
+                    margin: 10px 0;
+                    box-shadow: 0 5px 12px rgba(0,0,0,0.5);
+                }
+                .stForm{
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+                        
+                }
+                .contact-title {
+                    text-align: center;
+                    color: #667eea;
+                    font-weight: 700;
+                    margin-bottom: 1rem;
+                    font-size: 1.3rem;
+                }
+                .stTextInput>div>div>input, .stTextArea>div>div>textarea {
+                    border-radius: 12px;
+                }
+                .stFormSubmitButton>button {
+                    width: 100%;
+                    border-radius: 12px;
+                    background: red;
+                    border: 0px !important;
+                    color: white !important;
+                    font-weight: 600;
+                    padding: 0.6rem;
+                    transition: all 0.3s ease;
+                }
+                .stFormSubmitButton>button:hover {
+                    background: blue;
+                    color: white;
+                    transform: translateY(-2px);
+                }
+                </style>
+            """, unsafe_allow_html=True)
+
+            import re
+
+            with st.sidebar:
+                st.markdown("""<div class='contact-title'><i class="fa-solid fa-address-book"></i> Quick Contact</div>""", unsafe_allow_html=True)
+
+                with st.form("contact_form", clear_on_submit=True):
+                    name = st.text_input("Your Name")
+                    email = st.text_input("Your Email")
+                    message = st.text_area("Message", height=120)
+
+                    submitted = st.form_submit_button("Send Message")
+
+                    if submitted:
+                        # Regex pattern for valid email
+                        email_pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+
+                        if not name or not email or not message:
+                            st.warning("⚠️ Please fill all fields before submitting.")
+                        elif not re.match(email_pattern, email):
+                            st.error("❌ Please enter a valid email address (example: user@gmail.com).")
+                        else:
+                            if send_email(name, email, message):
+                                st.success("✅ Message sent successfully! We will reach you soon..")
+                            else:
+                                st.error("⚠️ Something went wrong while sending.")
+
+        contact_form_sidebar()
         st.markdown("---")
         st.markdown("""
              <h3 style='text-align: center;'><i class="fa-solid fa-bars-progress"></i> Core Insights</h3>""",
@@ -1109,10 +1201,7 @@ def sidebar_content():
                 <h2 style='text-align: center;'><i style="color:yellow;" class="fa-solid fa-lightbulb"></i></i> Fun Fact <strong style="color: #667eea;">MCQ</strong> of the day </h2>""",
                 unsafe_allow_html=True
             )
-            if "fun_mcq" not in st.session_state:
-                st.session_state.fun_mcq = random.choice(fun_mcqs)
-                
-            q = st.session_state.fun_mcq
+            q = random.choice(fun_mcqs)
             # Show the question
             st.sidebar.write(f"**{q['question']}**")
             
@@ -1475,32 +1564,56 @@ def main():
             </div>
         </div>
         """, unsafe_allow_html=True)
+    st.markdown("---")
     
     # FAQ Section
-    with st.expander("❓ Frequently Asked Questions", expanded=False):
+    st.markdown("""
+       <h2><i class="fa-solid fa-comments"></i><strong style="color: #667eea;">FAQs</strong></h2>
+     """, unsafe_allow_html=True)
+    
+    with st.expander("🚀  What is **AutoMARK** ...?", expanded=False):
         st.markdown("""
-            <div><h3><i class="fa-solid fa-comments"></i> Common Questions</h3></div> 
-        """, unsafe_allow_html=True)
+        **AutoMARK** is your intelligent companion for effortless **MCQ evaluations**.  
+        ⚡ Powered by **advanced AI**, it eliminates manual checking, ensuring **lightning-fast** and **error-free** grading.  
+
+        Instead of only marking answers right or wrong, **AutoMARK** provides **actionable insights** ✨ —  
+        empowering learners to improve 📈 and enabling educators to focus on what truly matters: **teaching**.  
+
+        With AutoMARK, assessments aren’t just **faster** — they’re **smarter, fairer, and remarkably efficient**.  
+        It’s not just a grading tool… it’s a true **🚀 game-changer for modern learning.**  
+        """)
+
+    with st.expander("🎯 How accurate is the AI grading?", expanded=False):
         st.markdown("""
-        **Q: What image formats are supported?**  
-        A: We support PNG, JPG, and JPEG formats up to 10MB in size.
-        
-        **Q: How accurate is the AI grading?**  
-        A: Our AI achieves 98.5% accuracy rate with clear, high-quality images.
-        
-        **Q: Can it handle handwritten answers?**  
-        A: Currently optimized for printed MCQs. Handwritten support coming soon!
-        
-        **Q: Is my data secure?**  
-        A: Yes! We don't store your images or results. Everything is processed securely.
-        
-        **Q: Can I grade multiple sheets at once?**  
-        A: Batch processing feature is available for premium users. Contact us for details.
-        
-        **Q: What if the grading seems incorrect?**  
-        A: Please contact our support team with the image for manual review and improvement.
-        """
-        )
+        Our AI achieves an impressive **98.5% accuracy rate** ⚡ when images are clear and of high quality.  
+        """)
+
+    with st.expander("✍️ Can it handle handwritten answers?", expanded=False):
+        st.markdown("""
+        At the moment, AutoMARK is optimized for **printed MCQs**.  
+        ✨ *Handwritten support is coming soon!*  
+        """)
+
+    with st.expander("🔒 Is my data secure?", expanded=False):
+        st.markdown("""
+        Absolutely! ✅ We do **not store** your images or results.  
+        Everything is processed **securely and privately**.  
+        """)
+
+    with st.expander("📑 Can I grade multiple sheets at once?", expanded=False):
+        st.markdown("""
+        Yes! Our **batch processing feature** is available for **premium users**.  
+        👉 Contact us for more details.  
+        """)
+
+    with st.expander("🤔 What if the grading seems incorrect?", expanded=False):
+        st.markdown("""
+        Don’t worry! 🙌 Please reach out to our **support team** with the image.  
+        We’ll manually review and keep improving the AI.  
+        """)
+
+    
+
     
 
     
@@ -1508,8 +1621,8 @@ def main():
     st.markdown("""
     <div style="text-align: center; padding: 2rem 0; border-top: 1px solid #e2e8f0; margin-top: 2rem;">
         <p style="color: #666; margin: 0;">
-            ✦ Crafted with ❣ by <strong style="color: #667eea;">CHOUDARY HUSSAIN ALI</strong> | 
-            Powered by Google Vision AI | Built with Advanced Technology ✦
+            Crafted with ❣ by <strong style="color: #667eea;">CHOUDARY HUSSAIN ALI</strong> | 
+            Powered by Google Vision AI | Built with Advanced Technology 
         </p>
         <p style="color: #999; font-size: 0.9rem; margin: 0.5rem 0 0 0;">
             © 2025 AutoMARK AI. All rights reserved. | 
@@ -1525,4 +1638,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
