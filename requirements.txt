@@ -5,4 +5,4 @@ opencv-python
 google-generativeai
 pandas
 python-dotenv
-smtplib
+
