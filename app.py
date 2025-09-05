@@ -1201,7 +1201,7 @@ def sidebar_content():
                 <h2 style='text-align: center;'><i style="color:yellow;" class="fa-solid fa-lightbulb"></i></i> Fun Fact <strong style="color: #667eea;">MCQ</strong> of the day </h2>""",
                 unsafe_allow_html=True
             )
-            if fun_mcq not in st.session_state:
+            if "fun_mcq" not in st.session_state:
                 st.session_state.fun_mcq = random.choice(fun_mcqs)
 
             q = st.session_state.fun_mcq
@@ -1641,4 +1641,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
