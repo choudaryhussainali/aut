@@ -3,8 +3,6 @@ from PIL import Image
 import io
 import time
 import json
-import smtplib
-from email.mime.text import MIMEText
 import os
 import requests
 import numpy as np
@@ -12,7 +10,6 @@ import google.generativeai as genai
 import random
 from fun_mcqs import fun_mcqs
 import os
-import resend
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -1655,3 +1652,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
