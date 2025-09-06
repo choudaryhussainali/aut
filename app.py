@@ -6,11 +6,13 @@ import json
 import smtplib
 from email.mime.text import MIMEText
 import os
+import requests
 import numpy as np
 import google.generativeai as genai
 import random
 from fun_mcqs import fun_mcqs
 import os
+import resend
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -24,30 +26,35 @@ st.set_page_config(
 )
 
 load_dotenv()
-EMAIL_HOST = os.getenv("EMAIL_HOST")
-EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
-EMAIL_USER = os.getenv("EMAIL_USER")
-EMAIL_PASS = os.getenv("EMAIL_PASS")
-TO_EMAIL = os.getenv("TO_EMAIL")
+
+ELASTIC_API_KEY = os.getenv("ELASTIC_API_KEY")
+FROM_EMAIL = os.getenv("FROM_EMAIL")  # must be verified in Elastic Email
+TO_EMAIL = os.getenv("TO_EMAIL")      # where you want to receive messages
 
 
+# ------------------ EMAIL FUNCTION ------------------
 def send_email(name, email, message):
-    """Send email using SMTP"""
-    body = f"📩 New contact form submission:\n\nName: {name}\nEmail: {email}\n\nMessage:\n{message}"
-
-    msg = MIMEText(body)
-    msg["Subject"] = "New Contact Form Submission"
-    msg["From"] = EMAIL_USER
-    msg["To"] = TO_EMAIL
+    """Send contact form email via Elastic Email API"""
+    url = "https://api.elasticemail.com/v2/email/send"
+    payload = {
+        "apikey": ELASTIC_API_KEY,
+        "from": FROM_EMAIL,
+        "to": TO_EMAIL,
+        "subject": f"📩 New Contact from {name}",
+        "bodyHtml": f"""
+            <h3>New Contact Form Submission</h3>
+            <p><b>Name:</b> {name}</p>
+            <p><b>Email:</b> {email}</p>
+            <p><b>Message:</b><br>{message}</p>
+        """
+    }
 
     try:
-        with smtplib.SMTP(EMAIL_HOST, EMAIL_PORT) as server:
-            server.starttls()
-            server.login(EMAIL_USER, EMAIL_PASS)
-            server.send_message(msg)
-        return True
+        response = requests.post(url, data=payload)
+        res = response.json()
+        return res.get("success", False)
     except Exception as e:
-        st.error(f"❌ Email failed: {e}")
+        st.error(f"❌ Error: {e}")
         return False
 
 
@@ -1156,6 +1163,7 @@ def sidebar_content():
                                 st.success("✅ Message sent successfully! We will reach you soon..")
                             else:
                                 st.error("⚠️ Something went wrong while sending.")
+                                
 
         contact_form_sidebar()
         st.markdown("---")
@@ -1201,6 +1209,7 @@ def sidebar_content():
                 <h2 style='text-align: center;'><i style="color:yellow;" class="fa-solid fa-lightbulb"></i></i> Fun Fact <strong style="color: #667eea;">MCQ</strong> of the day </h2>""",
                 unsafe_allow_html=True
             )
+
             if "fun_mcq" not in st.session_state:
                 st.session_state.fun_mcq = random.choice(fun_mcqs)
 
@@ -1641,5 +1650,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
