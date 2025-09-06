@@ -3,6 +3,8 @@ from PIL import Image
 import io
 import time
 import json
+import smtplib
+from email.mime.text import MIMEText
 import os
 import requests
 import numpy as np
@@ -10,6 +12,7 @@ import google.generativeai as genai
 import random
 from fun_mcqs import fun_mcqs
 import os
+import resend
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -1105,7 +1108,6 @@ def sidebar_content():
                 }
                 .stForm{
                     box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-                        
                 }
                 .contact-title {
                     text-align: center;
@@ -1117,14 +1119,20 @@ def sidebar_content():
                 .stTextInput>div>div>input, .stTextArea>div>div>textarea {
                     border-radius: 12px;
                 }
+                /* Button styling */
+                .stFormSubmitButton {
+                    display: flex;
+                    justify-content: center; /* horizontally center */
+                }
                 .stFormSubmitButton>button {
-                    width: 100%;
+                    width: auto !important; /* shrink to fit text */
+                    min-width: 150px; /* optional fixed min size */
                     border-radius: 12px;
                     background: red;
                     border: 0px !important;
                     color: white !important;
                     font-weight: 600;
-                    padding: 0.6rem;
+                    padding: 0.6rem 1.5rem;
                     transition: all 0.3s ease;
                 }
                 .stFormSubmitButton>button:hover {
@@ -1160,7 +1168,7 @@ def sidebar_content():
                                 st.success("✅ Message sent successfully! We will reach you soon..")
                             else:
                                 st.error("⚠️ Something went wrong while sending.")
-                                
+
 
         contact_form_sidebar()
         st.markdown("---")
@@ -1647,4 +1655,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
