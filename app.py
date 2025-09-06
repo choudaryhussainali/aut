@@ -1160,12 +1160,39 @@ def sidebar_content():
                     padding: 0.6rem 1.5rem;
                     transition: all 0.3s ease;
                 }
-                .stFormSubmitButton>button:hover {
-                    background: blue;
-                    color: white;
-                    transform: translateY(-2px);
+
+                div[class*="st-key-FormSubmitter-contact_form-Send-Message"] * {
+                    opacity: 1 !important;
+                    filter: none !important;
                 }
+                div[class*="st-key-FormSubmitter-contact_form-Send-Message"] .stFormSubmitButton > button,
+                div[class*="st-key-FormSubmitter-contact_form-Send-Message"] [data-testid="stFormSubmitButton"] > button {
+                width: auto !important;           /* don't stretch full width */
+                min-width: 150px !important;      /* nice button size */
+                padding: 10px 20px !important;
+                border-radius: 12px !important;
+                background: red;
+                color: #ffffff !important;
+                font-weight: 800 !important;
+                box-shadow: 0 8px 24px rgba(79,70,229,0.18) !important;
+                opacity: 1 !important;            /* ensure full opacity inside this container */
+                border: 0 !important;
+                transition: transform .12s ease, box-shadow .12s ease !important;
+                }
+                .stFormSubmitButton>button:hover {
+                    background: linear-gradient(135deg, #141E30 0%, #243B55 100%) !important;
+                    color: white;
+                    transform: translateY(-3px);
+                }                
+
+                button[data-testid="stBaseButton-primary"],
+                    button[data-testid="stBaseButton-secondary"],
+                    button[data-testid="stBaseButton-secondaryFormSubmit"] {
+                    opacity: 1 !important;
+                    filter: none !important;
+                    }
                 </style>
+                        
             """, unsafe_allow_html=True)
 
             import re
