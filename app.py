@@ -24,8 +24,11 @@ hide_header = """
                 #MainMenu {visibility: hidden;}
                 footer {visibility: hidden;}
                 header {visibility: hidden;}
-                ._profileContainer_gzau3_53 {visibility: hidden;}
+                ._profileContainer_gzau3_53 {visibility: hidden !important;}
+                ._container_gzau3_1 _viewerBadge_nim44_23 {visibility: hidden !important;}
+                ._link_gzau3_10 {visibility: hidden !important;}
                 ._profilePreview_gzau3_63 {visibility: hidden;}
+                ._profilePreview_gzau3_63 {visibility: hidden !important;}
                 
                 /* Primary: target the app-creator avatar by data-testid */
                 img[data-testid="appCreatorAvatar"] { 
@@ -1746,6 +1749,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
