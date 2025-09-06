@@ -29,35 +29,7 @@ hide_header = """
                 ._link_gzau3_10 {visibility: hidden !important;}
                 ._profilePreview_gzau3_63 {visibility: hidden;}
                 ._profilePreview_gzau3_63 {visibility: hidden !important;}
-                
-                /* Primary: target the app-creator avatar by data-testid */
-                img[data-testid="appCreatorAvatar"] { 
-                  display: none !important;
-                  visibility: hidden !important;
-                  opacity: 0 !important;
-                  pointer-events: none !important;
-                }
-                
-                a[href*="share.streamlit.io/user"] { 
-                  display: none !important;
-                  visibility: hidden !important;
-                  pointer-events: none !important;
-                }
-                div[class*="_profileContainer_"],
-                div[class*="_profilePreview_"],
-                img[class*="_profileImage_"] {
-                  display: none !important;
-                  visibility: hidden !important;
-                  opacity: 0 !important;
-                  pointer-events: none !important;
-                }
-                
-                img[alt="App Creator Avatar"] {
-                  display: none !important;
-                  visibility: hidden !important;
-                  opacity: 0 !important;
-                  pointer-events: none !important;
-                }
+                ._profileImage_gzau3_78._lightThemeShadow_gzau3_95 {visibility: hidden !important;}
                 
                 </style>
 
@@ -1749,6 +1721,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
