@@ -24,6 +24,9 @@ hide_header = """
                 #MainMenu {visibility: hidden;}
                 footer {visibility: hidden;}
                 header {visibility: hidden;}
+                ._profileContainer_gzau3_53 {visibility: hidden;}
+                ._profilePreview_gzau3_63 {visibility: hidden;}
+                
                 /* Primary: target the app-creator avatar by data-testid */
                 img[data-testid="appCreatorAvatar"] { 
                   display: none !important;
@@ -1743,5 +1746,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
