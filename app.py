@@ -1113,13 +1113,41 @@ def sidebar_content():
                     margin-bottom: 1rem;
                     font-size: 1.3rem;
                 }
+
+                div[class*="st-key-FormSubmitter-contact_form-Send-Message"] {
+                    width: 100% !important;
+                    display: flex !important;
+                    justify-content: center !important; /* horizontal center */
+                    align-items: center !important;     /* vertical center */
+                    padding: 0 !important;
+                    box-sizing: border-box !important;
+                    }
+                        
+                div[class*="st-key-FormSubmitter-contact_form-Send-Message"] .stFormSubmitButton > button,
+                div[class*="st-key-FormSubmitter-contact_form-Send-Message"] [data-testid="stFormSubmitButton"] > button {
+                    width: auto !important;
+                    min-width: 140px !important;
+                    padding: 10px 20px !important;
+                    border-radius: 10px !important;
+                    box-shadow: none !important;
+                }
+                        
+                div[class*="st-key-FormSubmitter-contact_form-Send-Message"] .stFormSubmitButton button div[data-testid="stMarkdownContainer"],
+                div[class*="st-key-FormSubmitter-contact_form-Send-Message"] [data-testid="stFormSubmitButton"] button div[data-testid="stMarkdownContainer"] {
+                    text-align: center !important;
+                }
                 .stTextInput>div>div>input, .stTextArea>div>div>textarea {
                     border-radius: 12px;
                 }
                 /* Button styling */
+                        
+                div.stFormSubmitButton {
+                    display: flex !important;
+                    justify-content: center !important;
+                }
                 .stFormSubmitButton {
-                    display: flex;
-                    justify-content: center; /* horizontally center */
+                    display: flex !important;
+                    justify-content: center !important; /* horizontally center */
                 }
                 .stFormSubmitButton>button {
                     width: auto !important; /* shrink to fit text */
@@ -1652,4 +1680,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
