@@ -12,8 +12,6 @@ from fun_mcqs import fun_mcqs
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
-
 # Page configuration
 st.set_page_config(
     page_title="AutoMARK AI - Professional MCQs Grading",
@@ -21,7 +19,17 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+hide_header = """
+                <style>
+                #MainMenu {visibility: hidden;}
+                footer {visibility: hidden;}
+                header {visibility: hidden;}
+                
+                </style>
 
+                """
+
+st.markdown(hide_header, unsafe_allow_html=True)
 load_dotenv()
 
 ELASTIC_API_KEY = os.getenv("ELASTIC_API_KEY")
@@ -1707,3 +1715,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
